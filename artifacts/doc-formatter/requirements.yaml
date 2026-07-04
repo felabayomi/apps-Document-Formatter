@@ -1,0 +1,12 @@
+packages:
+  "framer-motion": "Smooth layout transitions and enter animations"
+  "lucide-react": "Beautiful consistent icons"
+  "date-fns": "For formatting default date strings"
+  "usehooks-ts": "For debouncing and other helpful hooks"
+
+images: []
+
+notes:
+  - The API endpoints for docx and pdf return binary Blobs.
+  - The API endpoint for txt returns JSON with a formattedText field.
+  - We use standard React state for the form since it's a relatively flat, single-purpose interface.

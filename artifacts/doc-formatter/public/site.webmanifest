@@ -1,0 +1,14 @@
+{
+    "name": "Document Formatter",
+    "short_name": "Formatter",
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ],
+    "theme_color": "#312e81",
+    "background_color": "#312e81",
+    "display": "standalone"
+}

@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Document Formatter"
+version = "1.0.0"
+id = "artifacts/doc-formatter"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21493
+
+[services.development]
+run = "pnpm --filter @workspace/doc-formatter run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/doc-formatter", "run", "build" ]
+publicDir = "artifacts/doc-formatter/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21493"
+BASE_PATH = "/"
