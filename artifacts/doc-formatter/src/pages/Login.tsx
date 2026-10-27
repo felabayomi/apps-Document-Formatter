@@ -100,9 +100,12 @@ export default function LoginPage({ onSignedIn, currentUser, onLogout }: LoginPa
                         <ShieldCheck className="w-6 h-6" />
                     </div>
                     <div>
-                        <CardTitle className="text-2xl">Felix Platform Document Formatter</CardTitle>
+                        <CardTitle className="text-2xl">Document Formatter</CardTitle>
                         <CardDescription className="mt-1">
-                            Access is limited to Felix Platform admins and approved paid users.
+                            Turn messy text into polished academic papers, business reports, and export-ready documents with the Felix Platform formatter.
+                            <span className="mt-2 block">
+                                Private web tool with Word, PDF, and text export workflows.
+                            </span>
                         </CardDescription>
                     </div>
                 </CardHeader>
@@ -124,7 +127,7 @@ export default function LoginPage({ onSignedIn, currentUser, onLogout }: LoginPa
                             <div className="flex flex-col gap-2 sm:flex-row">
                                 <Button className="flex-1" onClick={() => setRequestDialogOpen(true)}>
                                     <Mail className="w-4 h-4 mr-2" />
-                                    Request access
+                                    Request Formatter Access
                                 </Button>
                                 {onLogout ? (
                                     <Button type="button" variant="outline" className="flex-1" onClick={onLogout}>
@@ -179,7 +182,7 @@ export default function LoginPage({ onSignedIn, currentUser, onLogout }: LoginPa
 
                             <Button type="button" variant="outline" className="w-full" onClick={() => setRequestDialogOpen(true)}>
                                 <Mail className="w-4 h-4 mr-2" />
-                                Request access
+                                Request Formatter Access
                             </Button>
                         </>
                     )}
@@ -197,7 +200,7 @@ export default function LoginPage({ onSignedIn, currentUser, onLogout }: LoginPa
                                 <div>
                                     <CardTitle>Request Document Formatter access</CardTitle>
                                     <CardDescription className="mt-1">
-                                        Tell the Felix Platform team who you are and how you plan to use the formatter.
+                                        Tell us who you are and how you plan to use the formatter.
                                     </CardDescription>
                                 </div>
                                 <Button type="button" variant="ghost" size="icon" onClick={() => setRequestDialogOpen(false)}>
