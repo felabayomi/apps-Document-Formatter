@@ -20,4 +20,5 @@ export const FormatRequestDocumentType = {
   chicago: "chicago",
   general: "general",
   edd_dissertation: "edd_dissertation",
+  professional_resume: "professional_resume",
 } as const;

@@ -22,6 +22,47 @@ export const FormatRequestDocumentType = {
   mla: "mla",
   chicago: "chicago",
   general: "general",
+  edd_dissertation: "edd_dissertation",
+  professional_resume: "professional_resume",
+} as const;
+
+/**
+ * Font family for the document
+ */
+export type FormatRequestFontFamily =
+  (typeof FormatRequestFontFamily)[keyof typeof FormatRequestFontFamily];
+
+export const FormatRequestFontFamily = {
+  Times_New_Roman: "Times New Roman",
+  Arial: "Arial",
+  Georgia: "Georgia",
+  Courier_New: "Courier New",
+} as const;
+
+/**
+ * Font size in points
+ */
+export type FormatRequestFontSize =
+  (typeof FormatRequestFontSize)[keyof typeof FormatRequestFontSize];
+
+export const FormatRequestFontSize = {
+  NUMBER_10: 10,
+  NUMBER_11: 11,
+  NUMBER_12: 12,
+  NUMBER_14: 14,
+  NUMBER_16: 16,
+} as const;
+
+/**
+ * Line spacing style
+ */
+export type FormatRequestLineSpacing =
+  (typeof FormatRequestLineSpacing)[keyof typeof FormatRequestLineSpacing];
+
+export const FormatRequestLineSpacing = {
+  single: "single",
+  "15": "1.5",
+  double: "double",
 } as const;
 
 export interface FormatRequest {
@@ -35,6 +76,12 @@ export interface FormatRequest {
   author?: string;
   /** Optional date string */
   date?: string;
+  /** Font family for the document */
+  fontFamily?: FormatRequestFontFamily;
+  /** Font size in points */
+  fontSize?: FormatRequestFontSize;
+  /** Line spacing style */
+  lineSpacing?: FormatRequestLineSpacing;
 }
 
 export interface FormatTextResponse {

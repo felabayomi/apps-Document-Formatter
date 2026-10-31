@@ -150,7 +150,7 @@ components:
           description: The raw document text to format
         documentType:
           type: string
-          enum: [academic, business, apa, mla, chicago, general]
+          enum: [academic, business, apa, mla, chicago, general, edd_dissertation, professional_resume]
           description: The type of document format to apply
         title:
           type: string

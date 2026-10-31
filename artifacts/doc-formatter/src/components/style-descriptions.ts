@@ -35,5 +35,10 @@ export const STYLE_DESCRIPTIONS: Record<FormatRequestDocumentType, { title: stri
     title: "EdD Dissertation (Antioch APA)",
     description: "Full Antioch University EdD dissertation template. Generates title page, approval page, abstract, chapter structure, references, and appendix in APA 7th Edition format.",
     icon: "GraduationCap"
+  },
+  professional_resume: {
+    title: "Professional Resume",
+    description: "A clean, compact resume layout with a prominent name, clear section headings, and readable experience and skills lists.",
+    icon: "Briefcase"
   }
 };

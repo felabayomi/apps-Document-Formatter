@@ -19,30 +19,41 @@ export const HealthCheckResponse = zod.object({
  * Formats raw text into a properly structured Word document
  * @summary Format document as DOCX
  */
-const formatTypingFields = {
+export const FormatDocxBody = zod.object({
+  text: zod.string().describe("The raw document text to format"),
+  documentType: zod
+    .enum([
+      "academic",
+      "business",
+      "apa",
+      "mla",
+      "chicago",
+      "general",
+      "edd_dissertation",
+      "professional_resume",
+    ])
+    .describe("The type of document format to apply"),
+  title: zod.string().optional().describe("Optional document title"),
+  author: zod.string().optional().describe("Optional author name"),
+  date: zod.string().optional().describe("Optional date string"),
   fontFamily: zod
     .enum(["Times New Roman", "Arial", "Georgia", "Courier New"])
     .optional()
     .describe("Font family for the document"),
   fontSize: zod
-    .union([zod.literal(10), zod.literal(11), zod.literal(12), zod.literal(14), zod.literal(16)])
+    .union([
+      zod.literal(10),
+      zod.literal(11),
+      zod.literal(12),
+      zod.literal(14),
+      zod.literal(16),
+    ])
     .optional()
     .describe("Font size in points"),
   lineSpacing: zod
     .enum(["single", "1.5", "double"])
     .optional()
     .describe("Line spacing style"),
-};
-
-export const FormatDocxBody = zod.object({
-  text: zod.string().describe("The raw document text to format"),
-  documentType: zod
-    .enum(["academic", "business", "apa", "mla", "chicago", "general", "edd_dissertation"])
-    .describe("The type of document format to apply"),
-  title: zod.string().optional().describe("Optional document title"),
-  author: zod.string().optional().describe("Optional author name"),
-  date: zod.string().optional().describe("Optional date string"),
-  ...formatTypingFields,
 });
 
 /**
@@ -52,12 +63,38 @@ export const FormatDocxBody = zod.object({
 export const FormatPdfBody = zod.object({
   text: zod.string().describe("The raw document text to format"),
   documentType: zod
-    .enum(["academic", "business", "apa", "mla", "chicago", "general", "edd_dissertation"])
+    .enum([
+      "academic",
+      "business",
+      "apa",
+      "mla",
+      "chicago",
+      "general",
+      "edd_dissertation",
+      "professional_resume",
+    ])
     .describe("The type of document format to apply"),
   title: zod.string().optional().describe("Optional document title"),
   author: zod.string().optional().describe("Optional author name"),
   date: zod.string().optional().describe("Optional date string"),
-  ...formatTypingFields,
+  fontFamily: zod
+    .enum(["Times New Roman", "Arial", "Georgia", "Courier New"])
+    .optional()
+    .describe("Font family for the document"),
+  fontSize: zod
+    .union([
+      zod.literal(10),
+      zod.literal(11),
+      zod.literal(12),
+      zod.literal(14),
+      zod.literal(16),
+    ])
+    .optional()
+    .describe("Font size in points"),
+  lineSpacing: zod
+    .enum(["single", "1.5", "double"])
+    .optional()
+    .describe("Line spacing style"),
 });
 
 /**
@@ -67,12 +104,38 @@ export const FormatPdfBody = zod.object({
 export const FormatTxtBody = zod.object({
   text: zod.string().describe("The raw document text to format"),
   documentType: zod
-    .enum(["academic", "business", "apa", "mla", "chicago", "general", "edd_dissertation"])
+    .enum([
+      "academic",
+      "business",
+      "apa",
+      "mla",
+      "chicago",
+      "general",
+      "edd_dissertation",
+      "professional_resume",
+    ])
     .describe("The type of document format to apply"),
   title: zod.string().optional().describe("Optional document title"),
   author: zod.string().optional().describe("Optional author name"),
   date: zod.string().optional().describe("Optional date string"),
-  ...formatTypingFields,
+  fontFamily: zod
+    .enum(["Times New Roman", "Arial", "Georgia", "Courier New"])
+    .optional()
+    .describe("Font family for the document"),
+  fontSize: zod
+    .union([
+      zod.literal(10),
+      zod.literal(11),
+      zod.literal(12),
+      zod.literal(14),
+      zod.literal(16),
+    ])
+    .optional()
+    .describe("Font size in points"),
+  lineSpacing: zod
+    .enum(["single", "1.5", "double"])
+    .optional()
+    .describe("Line spacing style"),
 });
 
 export const FormatTxtResponse = zod.object({
