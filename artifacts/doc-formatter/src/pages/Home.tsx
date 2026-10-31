@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import {
   FileText, Download, FileType, AlignLeft, Settings2,
   RefreshCcw, BookOpen, GraduationCap, Briefcase, Landmark, Library,
-  Upload, X, FileUp, Type, ExternalLink, LogOut
+  Upload, X, FileUp, Type, ExternalLink, LogOut, Eye
 } from "lucide-react";
 
 import { useFormatActions } from "@/hooks/use-format-actions";
@@ -65,6 +65,7 @@ interface HomeProps {
 export default function Home({ currentUser, onLogout }: HomeProps) {
   const [activeTab, setActiveTab] = useState("editor");
   const [previewContent, setPreviewContent] = useState<string | null>(null);
+  const [previewSource, setPreviewSource] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadedFilename, setUploadedFilename] = useState<string | null>(null);
 
@@ -78,6 +79,7 @@ export default function Home({ currentUser, onLogout }: HomeProps) {
   const [lineSpacing, setLineSpacing] = useState<LineSpacing>("double");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewSectionRef = useRef<HTMLDivElement>(null);
 
   const {
     handleFormatDocx, handleFormatPdf, handleFormatTxt, handleOpenInGoogleDocs,
@@ -102,16 +104,32 @@ export default function Home({ currentUser, onLogout }: HomeProps) {
     lineSpacing,
   });
 
+  const formData = getFormData();
+  const currentPreviewSource = JSON.stringify(formData);
+  const isPreviewStale = previewContent === null || previewSource !== currentPreviewSource;
+
   const onGeneratePreview = async () => {
     if (!text.trim()) return;
-    const content = await generatePreview(getFormData());
-    if (content) setPreviewContent(content);
+    const data = getFormData();
+    const source = JSON.stringify(data);
+    const content = await generatePreview(data);
+    if (content) {
+      setPreviewContent(content);
+      setPreviewSource(source);
+    }
   };
 
   const handleTabChange = (val: string) => {
     setActiveTab(val);
-    if (val === "preview" && text.trim() && !previewContent) {
+    if (val === "preview" && text.trim() && isPreviewStale) {
       onGeneratePreview();
+    }
+  };
+
+  const handlePreviewBeforeDownload = () => {
+    handleTabChange("preview");
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      previewSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -132,34 +150,34 @@ export default function Home({ currentUser, onLogout }: HomeProps) {
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-primary/20">
       <header className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md border-b border-border/50 shadow-sm">
-        <div className="max-w-[1600px] mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-[1600px] mx-auto px-4 py-3 min-h-16 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-white shadow-lg shadow-primary/20">
               <AlignLeft className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="font-bold text-xl tracking-tight text-foreground leading-none">Felix Platform Formatter</h1>
+              <h1 className="font-bold text-lg sm:text-xl tracking-tight text-foreground leading-none">Felix Platform Formatter</h1>
               <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Secure document engine for approved users</p>
             </div>
           </div>
-          <div className="hidden md:flex items-center gap-3">
+          <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
             {currentUser ? (
-              <div className="text-right mr-2">
-                <p className="text-sm font-semibold text-foreground leading-none">
+              <div className="mr-auto min-w-0 sm:mr-2 sm:text-right">
+                <p className="truncate text-sm font-semibold text-foreground leading-none">
                   {currentUser.name || currentUser.email}
                 </p>
-                <p className="text-[11px] uppercase tracking-wider text-muted-foreground mt-1">
+                <p className="hidden text-[11px] uppercase tracking-wider text-muted-foreground mt-1 sm:block">
                   {currentUser.role || "authenticated user"}
                 </p>
               </div>
             ) : null}
             {onLogout ? (
-              <Button variant="ghost" size="sm" onClick={onLogout}>
+              <Button variant="ghost" size="sm" className="shrink-0" onClick={onLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Sign out
               </Button>
             ) : null}
-            <Button variant="outline" size="sm" onClick={() => { setText(""); setUploadedFilename(null); setPreviewContent(null); }} disabled={!text}>
+            <Button variant="outline" size="sm" className="shrink-0" onClick={() => { setText(""); setUploadedFilename(null); setPreviewContent(null); }} disabled={!text}>
               Clear Workspace
             </Button>
           </div>
@@ -234,7 +252,7 @@ export default function Home({ currentUser, onLogout }: HomeProps) {
 
             {/* Editor Tabs */}
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full flex-1 flex flex-col">
-              <div className="flex items-center justify-between mb-3">
+              <div ref={previewSectionRef} className="flex items-center justify-between mb-3">
                 <TabsList className="bg-white border shadow-sm p-1 rounded-xl">
                   <TabsTrigger value="editor" className="rounded-lg px-6 data-[state=active]:bg-slate-100 data-[state=active]:text-primary data-[state=active]:shadow-none transition-all">
                     {uploadedFilename ? "Extracted Text" : "Raw Input"}
@@ -281,6 +299,7 @@ export default function Home({ currentUser, onLogout }: HomeProps) {
                       content={previewContent}
                       isLoading={isGeneratingPreview}
                       documentType={documentType}
+                      isStale={isPreviewStale}
                     />
                   </div>
                 </TabsContent>
@@ -394,18 +413,22 @@ export default function Home({ currentUser, onLogout }: HomeProps) {
                 <div className="space-y-4">
                   <Label className="text-sm font-semibold text-slate-700">Optional Meta Data</Label>
                   <div className="space-y-2">
-                    <Label htmlFor="title" className="text-xs text-muted-foreground">Title</Label>
-                    <Input id="title" placeholder="e.g. The Impact of Artificial Intelligence" value={title} onChange={(e) => setTitle(e.target.value)} className="bg-slate-50/50 border-slate-200 focus-visible:ring-primary/20" />
+                    <Label htmlFor="title" className="text-xs text-muted-foreground">
+                      {documentType === "professional_resume" ? "Resume Subtitle (optional)" : "Title"}
+                    </Label>
+                    <Input id="title" placeholder={documentType === "professional_resume" ? "e.g. Senior Project Manager" : "e.g. The Impact of Artificial Intelligence"} value={title} onChange={(e) => setTitle(e.target.value)} className="bg-slate-50/50 border-slate-200 focus-visible:ring-primary/20" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="author" className="text-xs text-muted-foreground">Author Name</Label>
+                      <Label htmlFor="author" className="text-xs text-muted-foreground">
+                        {documentType === "professional_resume" ? "Name" : "Author Name"}
+                      </Label>
                       <Input id="author" placeholder="Jane Doe" value={author} onChange={(e) => setAuthor(e.target.value)} className="bg-slate-50/50 border-slate-200 focus-visible:ring-primary/20" />
                     </div>
-                    <div className="space-y-2">
+                    {documentType !== "professional_resume" ? <div className="space-y-2">
                       <Label htmlFor="date" className="text-xs text-muted-foreground">Date</Label>
                       <Input id="date" value={date} onChange={(e) => setDate(e.target.value)} className="bg-slate-50/50 border-slate-200 focus-visible:ring-primary/20" />
-                    </div>
+                    </div> : null}
                   </div>
                 </div>
               </CardContent>
@@ -418,9 +441,19 @@ export default function Home({ currentUser, onLogout }: HomeProps) {
                   <Download className="w-5 h-5 text-primary" />
                   Export Document
                 </CardTitle>
-                <CardDescription>Download your perfectly formatted document instantly.</CardDescription>
+                <CardDescription>Preview your formatting before downloading.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handlePreviewBeforeDownload}
+                  disabled={!text.trim() || isGeneratingPreview}
+                  className="w-full h-12 justify-start px-6 gap-4 text-base font-medium"
+                >
+                  <Eye className="w-5 h-5 text-primary" />
+                  {isGeneratingPreview ? "Preparing preview..." : "Preview before downloading"}
+                </Button>
                 <Button
                   onClick={() => handleFormatDocx(getFormData(), title || "Document")}
                   disabled={!text.trim() || isFormatting}

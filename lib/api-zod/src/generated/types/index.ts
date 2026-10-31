@@ -11,5 +11,8 @@ export * from "./extractTextBody";
 export * from "./extractTextResponse";
 export * from "./formatRequest";
 export * from "./formatRequestDocumentType";
+export * from "./formatRequestFontFamily";
+export * from "./formatRequestFontSize";
+export * from "./formatRequestLineSpacing";
 export * from "./formatTextResponse";
 export * from "./healthStatus";

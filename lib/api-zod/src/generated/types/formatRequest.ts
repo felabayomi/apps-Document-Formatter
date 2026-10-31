@@ -6,6 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { FormatRequestDocumentType } from "./formatRequestDocumentType";
+import type { FormatRequestFontFamily } from "./formatRequestFontFamily";
+import type { FormatRequestFontSize } from "./formatRequestFontSize";
+import type { FormatRequestLineSpacing } from "./formatRequestLineSpacing";
 
 export interface FormatRequest {
   /** The raw document text to format */
@@ -19,9 +22,9 @@ export interface FormatRequest {
   /** Optional date string */
   date?: string;
   /** Font family for the document */
-  fontFamily?: "Times New Roman" | "Arial" | "Georgia" | "Courier New";
+  fontFamily?: FormatRequestFontFamily;
   /** Font size in points */
-  fontSize?: 10 | 11 | 12 | 14 | 16;
+  fontSize?: FormatRequestFontSize;
   /** Line spacing style */
-  lineSpacing?: "single" | "1.5" | "double";
+  lineSpacing?: FormatRequestLineSpacing;
 }
